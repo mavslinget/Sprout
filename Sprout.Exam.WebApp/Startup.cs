@@ -1,16 +1,16 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Sprout.Exam.WebApp.Data;
-using Sprout.Exam.WebApp.Models;
+using Sprout.Exam.Business.Commands.Employee;
+using Sprout.Exam.Business.Commands.EmployeeSalary;
+using Sprout.Exam.DataAccess.Contexts;
+using Sprout.Exam.DataAccess.Entities;
 
 namespace Sprout.Exam.WebApp
 {
@@ -30,6 +30,8 @@ namespace Sprout.Exam.WebApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            services.AddScoped<IEmployeeSalaryFactory, EmployeeSalaryFactory>();
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -49,6 +51,12 @@ namespace Sprout.Exam.WebApp
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            // Register AutoMapper
+            services.AddAutoMapper(typeof(Program));
+
+            // Add MediatR with the assembly containing your request handlers
+            services.AddMediatR(typeof(CreateEmployeeCommand).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
