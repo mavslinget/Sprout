@@ -12,14 +12,5 @@
         }
         public decimal Calculate()
             => _basicMonthly - _absentDays * _basicMonthly / _numberOfDaysPerMonth - _basicMonthly * _tax / 100;
-
-        //public decimal Calculate()
-        //{
-        //    var calculate = _workedDays * _dailyRate;
-
-        //    var TwoDecimalCalculate = decimal.Round(calculate, 2, MidpointRounding.AwayFromZero);
-
-        //    return TwoDecimalCalculate;
-        //}
     }
 }
